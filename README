@@ -2,6 +2,6 @@ It's simplest xhprof gui for remote using.
 
 This app accept profiler data (xhprof, tideway , etc) by sending post with plain text to index.php.
 
-Also you must specify 'project' in GET parameters.
+Also you must specify 'project' in GET parameters and 'url' optional.
 
 Data stores in /traces project folder. There isn't any db.

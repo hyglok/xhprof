@@ -1381,9 +1381,7 @@ function profiler_diff_report($url_params,
  */
 function displayXHProfReport($xhprof_runs_impl, $url_params, $source,
                              $run, $wts, $symbol, $sort, $run1, $run2) {
-
   if ($run) {                              // specific run to display?
-
     // run may be a single run or a comma separate list of runs
     // that'll be aggregated. If "wts" (a comma separated list
     // of integral weights is specified), the runs will be

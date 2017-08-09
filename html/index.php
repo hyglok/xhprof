@@ -16,8 +16,15 @@
 
 $content = file_get_contents('php://input');
 if ($content) {
+    $url = array_key_exists('url', $_GET) ? $_GET['url'] : '';
     file_put_contents(
-        '../traces/' . uniqid() . rand(1, 100) . '.' . $_GET['project'] . ".xhprof",
+        '../traces/' .
+        $url .
+        uniqid() .
+        rand(1, 100) .
+        '.' .
+        $_GET['project'] .
+        ".xhprof",
         $content
     );
     exit;
@@ -39,12 +46,13 @@ $params = array('run'        => array(XHPROF_STRING_PARAM, ''),
                 );
 
 // pull values of these params, and create named globals for each param
-xhprof_param_init($params);
 
+xhprof_param_init($params);
 /* reset params to be a array of variable names to values
    by the end of this page, param should only contain values that need
    to be preserved for the next page. unset all unwanted keys in $params.
  */
+
 foreach ($params as $k => $v) {
   $params[$k] = $$k;
 
