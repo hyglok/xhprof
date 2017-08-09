@@ -67,7 +67,9 @@ interface iXHProfRuns {
  */
 class XHProfRuns_Default implements iXHProfRuns {
 
-  private $dir = '';
+  CONST TRACES_DIR = '../traces';
+
+  private $dir;
   private $suffix = 'xhprof';
 
   private function gen_run_id($type) {
@@ -81,30 +83,12 @@ class XHProfRuns_Default implements iXHProfRuns {
     if (!empty($this->dir)) {
       $file = $this->dir . "/" . $file;
     }
+
     return $file;
   }
 
   public function __construct($dir = null) {
-
-    // if user hasn't passed a directory location,
-    // we use the xhprof.output_dir ini setting
-    // if specified, else we default to the directory
-    // in which the error_log file resides.
-
-    if (empty($dir)) {
-      $dir = ini_get("xhprof.output_dir");
-      if (empty($dir)) {
-
-        $dir = sys_get_temp_dir();
-
-        xhprof_error("Warning: Must specify directory location for XHProf runs. ".
-                     "Trying {$dir} as default. You can either pass the " .
-                     "directory location as an argument to the constructor ".
-                     "for XHProfRuns_Default() or set xhprof.output_dir ".
-                     "ini param.");
-      }
-    }
-    $this->dir = $dir;
+      $this->dir = $dir ? : self::TRACES_DIR;
   }
 
   public function get_run($run_id, $type, &$run_desc) {

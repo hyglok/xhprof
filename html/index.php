@@ -14,26 +14,16 @@
 //  limitations under the License.
 //
 
-//
-// XHProf: A Hierarchical Profiler for PHP
-//
-// XHProf has two components:
-//
-//  * This module is the UI/reporting component, used
-//    for viewing results of XHProf runs from a browser.
-//
-//  * Data collection component: This is implemented
-//    as a PHP extension (XHProf).
-//
-//
-//
-// @author(s)  Kannan Muthukkaruppan
-//             Changhao Jiang
-//
+$content = file_get_contents('php://input');
+if ($content) {
+    file_put_contents(
+        '../traces/' . uniqid() . rand(1, 100) . '.' . $_GET['project'] . ".xhprof",
+        $content
+    );
+    exit;
+}
 
-// by default assume that xhprof_html & xhprof_lib directories
-// are at the same level.
-$GLOBALS['XHPROF_LIB_ROOT'] = dirname(__FILE__) . '/../xhprof_lib';
+$GLOBALS['XHPROF_LIB_ROOT'] = dirname(__FILE__) . '/../lib';
 
 require_once $GLOBALS['XHPROF_LIB_ROOT'].'/display/xhprof.php';
 
