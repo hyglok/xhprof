@@ -16,14 +16,15 @@
 
 $content = file_get_contents('php://input');
 if ($content) {
-    $url = array_key_exists('url', $_GET) ? $_GET['url'] : '';
+    $url = parse_url($_GET['url']);
+    $project = array_key_exists('project', $_GET) ? $_GET['project'] : $url['host'];
     file_put_contents(
         '../traces/' .
-        $url .
+        str_replace('/', '-', $url['path']) .
         uniqid() .
         rand(1, 100) .
         '.' .
-        $_GET['project'] .
+        $project .
         ".xhprof",
         $content
     );
