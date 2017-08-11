@@ -5,3 +5,5 @@ This app accept profiler data (xhprof, tideway , etc) by sending post with plain
 Also you must specify 'url' in GET parameters and 'project' is optional.
 
 Data stores in /traces project folder. There isn't any db.
+
+For other differences look at index.php

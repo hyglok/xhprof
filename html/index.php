@@ -17,12 +17,11 @@
 $content = file_get_contents('php://input');
 if ($content) {
     $url = parse_url($_GET['url']);
-    $project = array_key_exists('project', $_GET) ? $_GET['project'] : $url['host'];
+    $project = array_key_exists('project', $_GET) ? $_GET['project'] : str_replace('.', '-', $url['host']);
     file_put_contents(
         '../traces/' .
         str_replace('/', '-', $url['path']) .
-        uniqid() .
-        rand(1, 100) .
+        '||' .rand(1, 10) .
         '.' .
         $project .
         ".xhprof",
