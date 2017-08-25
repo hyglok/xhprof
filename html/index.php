@@ -15,18 +15,35 @@
 //
 
 $content = file_get_contents('php://input');
+$dir = '../traces/';
+$tracesMax = 35;
 if ($content) {
     $url = parse_url($_GET['url']);
     $project = array_key_exists('project', $_GET) ? $_GET['project'] : str_replace('.', '-', $url['host']);
-    file_put_contents(
-        '../traces/' .
-        str_replace('/', '-', $url['path']) .
-        '||' .rand(1, 10) .
-        '.' .
-        $project .
-        ".xhprof",
-        $content
-    );
+    $path = str_replace('/', '-', $url['path']);
+    $existedTraces = glob("{$dir}*{$path}*");
+    $tracesCount = count($existedTraces);
+    $currentPath = null;
+    if ($tracesCount != $tracesMax) {
+        $currentPath =
+            $dir .
+            ($tracesCount + 1) .
+            str_replace('/', '-', $url['path']) .
+            '.' .
+            $project .
+            ".xhprof"
+        ;
+    } else {
+        usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+        $oldestTrace = array_pop($existedTraces);
+        if (time() - filemtime($oldestTrace) > 1 * 3600) {
+            $currentPath = $oldestTrace;
+        }
+    }
+
+    if ($currentPath) {
+        file_put_contents($currentPath, bzcompress($content));
+    }
     exit;
 }
 

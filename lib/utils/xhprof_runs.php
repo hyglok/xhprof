@@ -100,7 +100,7 @@ class XHProfRuns_Default implements iXHProfRuns {
       return null;
     }
 
-    $contents = file_get_contents($file_name);
+    $contents = bzdecompress(file_get_contents($file_name));
     $run_desc = "XHProf Run (Namespace=$type)";
     return unserialize($contents);
   }
@@ -133,7 +133,7 @@ class XHProfRuns_Default implements iXHProfRuns {
     if (is_dir($this->dir)) {
         echo "<hr/>Existing runs:\n<ul>\n";
         $files = glob("{$this->dir}/*.{$this->suffix}");
-        usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+        natsort($files);
         foreach ($files as $file) {
             list($run,$source) = explode('.', basename($file));
             echo '<li><a href="' . htmlentities($_SERVER['SCRIPT_NAME'])
