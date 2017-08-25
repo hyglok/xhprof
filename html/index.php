@@ -36,7 +36,7 @@ if ($content) {
     } else {
         usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
         $oldestTrace = array_pop($existedTraces);
-        if (time() - filemtime($oldestTrace) > 1 * 3600) {
+        if (time() - filemtime($oldestTrace) > 4 * 3600) {
             $currentPath = $oldestTrace;
         }
     }
