@@ -42,7 +42,7 @@ if ($content) {
     }
 
     if ($currentPath) {
-        file_put_contents($currentPath, bzcompress($content));
+        file_put_contents($currentPath, gzencode($content));
     }
     exit;
 }

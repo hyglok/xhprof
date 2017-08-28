@@ -100,7 +100,7 @@ class XHProfRuns_Default implements iXHProfRuns {
       return null;
     }
 
-    $contents = bzdecompress(file_get_contents($file_name));
+    $contents = gzdecode(file_get_contents($file_name));
     $run_desc = "XHProf Run (Namespace=$type)";
     return unserialize($contents);
   }
