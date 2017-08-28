@@ -27,8 +27,8 @@ if ($content) {
     if ($tracesCount != $tracesMax) {
         $currentPath =
             $dir .
-            ($tracesCount + 1) .
             str_replace('/', '-', $url['path']) .
+            '[' . ($tracesCount + 1) . ']' .
             '.' .
             $project .
             ".xhprof"
