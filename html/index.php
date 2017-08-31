@@ -24,7 +24,7 @@ if ($content) {
     $existedTraces = glob("{$dir}*{$path}*");
     $tracesCount = count($existedTraces);
     $currentPath = null;
-    if ($tracesCount != $tracesMax) {
+    if ($tracesCount >= $tracesMax) {
         $currentPath =
             $dir .
             str_replace('/', '-', $url['path']) .
