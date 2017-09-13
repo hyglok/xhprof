@@ -20,14 +20,16 @@ $tracesMax = 35;
 if ($content) {
     $url = parse_url($_GET['url']);
     $project = array_key_exists('project', $_GET) ? $_GET['project'] : str_replace('.', '-', $url['host']);
-    $path = str_replace('/', '-', $url['path']);
+    $path = str_replace('/api/v1', '', $url['path']);
+    $path = str_replace('/', '-', $path);
+    $path = preg_replace('/[0-9]+/', '', $path);
     $existedTraces = glob("{$dir}*{$path}*");
     $tracesCount = count($existedTraces);
     $currentPath = null;
     if ($tracesCount < $tracesMax) {
         $currentPath =
             $dir .
-            str_replace('/', '-', $url['path']) .
+            $path .
             '[' . ($tracesCount + 1) . ']' .
             '.' .
             $project .

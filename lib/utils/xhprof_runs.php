@@ -131,7 +131,7 @@ class XHProfRuns_Default implements iXHProfRuns {
 
   function list_runs() {
     if (is_dir($this->dir)) {
-        echo "<hr/>Existing runs:\n<ul>\n";
+        echo "Existing runs:\n<ul>\n";
         $files = glob("{$this->dir}/*.{$this->suffix}");
         natsort($files);
         foreach ($files as $file) {
@@ -139,7 +139,7 @@ class XHProfRuns_Default implements iXHProfRuns {
             echo '<li><a href="' . htmlentities($_SERVER['SCRIPT_NAME'])
                 . '?run=' . htmlentities($run) . '&source='
                 . htmlentities($source) . '">'
-                . htmlentities(basename($file)) . "</a><small> "
+                . htmlentities(basename($file, '.xhprof')) . "</a><small> "
                 . date("Y-m-d H:i:s", filemtime($file)) . "</small></li>\n";
         }
         echo "</ul>\n";
