@@ -67,12 +67,35 @@ interface iXHProfRuns {
  */
 class XHProfRuns_Default implements iXHProfRuns {
 
-  CONST TRACES_DIR = '../traces';
+  CONST TRACES_DIR = '../traces/';
 
   private $dir;
   private $suffix = 'xhprof';
+  private $context;
 
-  private function gen_run_id($type) {
+  public static $domains = [
+      'account',
+      'competitions',
+      'sekabet',
+      'partner',
+      'manager' ,
+      'matchbook',
+      'payment' ,
+      'fundist' ,
+      'softswiss',
+      'microgaming',
+      'achievements',
+      'casino',
+      'agent',
+      'exchange',
+      'betfair',
+      'sportbook',
+      'player',
+      'other'
+
+  ];
+
+    private function gen_run_id($type) {
     return uniqid();
   }
 
@@ -87,8 +110,10 @@ class XHProfRuns_Default implements iXHProfRuns {
     return $file;
   }
 
-  public function __construct($dir = null) {
+  public function __construct($dir = null, $context = '') {
       $this->dir = $dir ? : self::TRACES_DIR;
+      $this->dir .= $context . '/';
+      $this->context = $context;
   }
 
   public function get_run($run_id, $type, &$run_desc) {
@@ -130,19 +155,27 @@ class XHProfRuns_Default implements iXHProfRuns {
   }
 
   function list_runs() {
-    if (is_dir($this->dir)) {
-        echo "Existing runs:\n<ul>\n";
+//    if (is_dir($this->dir)) {
+        echo "Domains:\n<hr><ul>";
+        foreach (self::$domains as $domain) {
+            echo '<li><a href="' /* . htmlentities($_SERVER['SCRIPT_NAME'])*/ . '?'. 'domain=' . $domain .'">'. $domain .'</a></li>'. "\n";
+        }
+        echo "Existing runs:\n<hr><ul>\n";
         $files = glob("{$this->dir}/*.{$this->suffix}");
-        natsort($files);
+        usort($files, function($a, $b) {
+            return filemtime($a) < filemtime($b);
+        });
         foreach ($files as $file) {
             list($run,$source) = explode('.', basename($file));
             echo '<li><a href="' . htmlentities($_SERVER['SCRIPT_NAME'])
-                . '?run=' . htmlentities($run) . '&source='
+                . '?run=' . htmlentities($run)
+                . '&domain=' . $_GET['domain']
+                . '&source='
                 . htmlentities($source) . '">'
                 . htmlentities(basename($file, '.xhprof')) . "</a><small> "
                 . date("Y-m-d H:i:s", filemtime($file)) . "</small></li>\n";
         }
         echo "</ul>\n";
-    }
+//    }
   }
 }

@@ -14,33 +14,63 @@
 //  limitations under the License.
 //
 
+$domains = [
+    'account' => ['/api/v1/account'],
+    'competitions' => ['/api/v1/competitions'],
+    'sekabet' => ['/api/v1/sekabet'],
+    'partner' => ['/api/v1/partner'],
+    'manager' => ['/api/v1/manager'],
+    'matchbook' => ['/api/v1/matchbook'],
+    'payment' => ['/api/v1/withdraw', '/api/v1/deposit', '/api/v1/payment'],
+    'fundist' => ['/api/v1/fundist'],
+    'softswiss' => ['/api/v1/softswiss'],
+    'microgaming' => ['/api/v1/microgaming'],
+    'achievements' => ['/api/v1/achievements'],
+    'casino' => ['/api/v1/casino'],
+    'agent' => ['/api/v1/agentsystem'],
+    'exchange' => ['/api/v1/exchange'],
+    'betfair' => ['/api/v1/betfair'],
+    'sportbook' => ['/api/v1/sportbook'],
+    'player' => ['/api/v1/player'],
+
+];
 $content = file_get_contents('php://input');
 $dir = '../traces/';
-$tracesMax = 35;
 if ($content) {
     $url = parse_url($_GET['url']);
+    $id = $_GET['id'];
+    $path = $url['path'];
     $project = array_key_exists('project', $_GET) ? $_GET['project'] : str_replace('.', '-', $url['host']);
-    $path = str_replace('/api/v1', '', $url['path']);
+    $subFolder = 'other';
+    foreach ($domains as $key => $domain) {
+        foreach ($domain as $relativeUrl) {
+            if (strpos($path, $relativeUrl) === 0) {
+                $subFolder = $key;
+            }
+        }
+    }
+
+    $path = str_replace('/api/v1', '', $path);
     $path = str_replace('/', '-', $path);
     $path = preg_replace('/[0-9]+/', '', $path);
-    $existedTraces = glob("{$dir}*{$path}*");
+    $existedTraces = glob("{$dir}{$subFolder}/{$path}*");
     $tracesCount = count($existedTraces);
-    $currentPath = null;
-    if ($tracesCount < $tracesMax) {
+    usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+    $oldestTrace = array_pop($existedTraces);
+
+    if ($oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
+        $currentPath = $oldestTrace;
+    } else {
         $currentPath =
             $dir .
+            $subFolder.'/' .
             $path .
             '[' . ($tracesCount + 1) . ']' .
+            strstr($id, '.', true) .
             '.' .
             $project .
             ".xhprof"
         ;
-    } else {
-        usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
-        $oldestTrace = array_pop($existedTraces);
-        if (time() - filemtime($oldestTrace) > 4 * 3600) {
-            $currentPath = $oldestTrace;
-        }
     }
 
     if ($currentPath) {
@@ -96,8 +126,8 @@ $vwlbar = ' class="vwlbar"';
 $vbbar = ' class="vbbar"';
 $vrbar = ' class="vrbar"';
 $vgbar = ' class="vgbar"';
-
-$xhprof_runs_impl = new XHProfRuns_Default();
+$domain = array_key_exists('domain', $_GET) ? $_GET['domain'] : '';
+$xhprof_runs_impl = new XHProfRuns_Default(null, $domain);
 
 displayXHProfReport($xhprof_runs_impl, $params, $source, $run, $wts,
                     $symbol, $sort, $run1, $run2);
