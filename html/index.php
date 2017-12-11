@@ -66,7 +66,7 @@ if ($content) {
             $subFolder.'/' .
             $path .
             '[' . ($tracesCount + 1) . ']' .
-            strstr($id, '.', true) .
+            str_replace('.', '*', $id) .
             '.' .
             $project .
             ".xhprof"

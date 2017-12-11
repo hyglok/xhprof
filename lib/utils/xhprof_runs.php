@@ -165,17 +165,28 @@ class XHProfRuns_Default implements iXHProfRuns {
         usort($files, function($a, $b) {
             return filemtime($a) < filemtime($b);
         });
-        foreach ($files as $file) {
-            list($run,$source) = explode('.', basename($file));
-            echo '<li><a href="' . htmlentities($_SERVER['SCRIPT_NAME'])
-                . '?run=' . htmlentities($run)
-                . '&domain=' . $_GET['domain']
-                . '&source='
-                . htmlentities($source) . '">'
-                . htmlentities(basename($file, '.xhprof')) . "</a><small> "
-                . date("Y-m-d H:i:s", filemtime($file)) . "</small></li>\n";
+        $hosts = [];
+        foreach ($files as $file)
+        {
+            $hosts[strstr(pathinfo($file)['filename'], '.', false)][] = $file;
         }
-        echo "</ul>\n";
+        foreach (array_keys($hosts) as $host) {
+            echo '<li><a href="'.'?'. 'domain='. $this->context . '&'. 'host=' . $host .'">'. str_replace('.', '', $host) .'</a></li>'. "\n";
+        }
+        echo '<hr>';
+        if (array_key_exists('host', $_GET)) {
+            foreach ($hosts[$_GET['host']] as $file) {
+                list($run,$source) = explode('.', basename($file));
+                echo '<li><a href="' . htmlentities($_SERVER['SCRIPT_NAME'])
+                    . '?run=' . htmlentities($run)
+                    . '&domain=' . $_GET['domain']
+                    . '&source='
+                    . htmlentities($source) . '">'
+                    . htmlentities(strstr(basename($file, '.xhprof'), '.', true)) . "</a><small> "
+                    . date("Y-m-d H:i:s", filemtime($file)) . "</small></li>\n";
+            }
+            echo "</ul>\n";
+        }
 //    }
   }
 }
