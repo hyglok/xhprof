@@ -34,12 +34,21 @@ $domains = [
     'player' => ['/api/v1/player'],
 
 ];
+
+$deprecatedUrls = [
+    'api/v1/account/active'
+];
 $content = file_get_contents('php://input');
 $dir = '../traces/';
 if ($content) {
     $url = parse_url($_GET['url']);
     $id = $_GET['id'];
     $path = $url['path'];
+    foreach ($deprecatedUrls as $url) {
+        if (strpos($path, $url)) {
+            exit;
+        }
+    }
     $project = array_key_exists('project', $_GET) ? $_GET['project'] : str_replace('.', '-', $url['host']);
     $subFolder = 'other';
     foreach ($domains as $key => $domain) {
@@ -58,7 +67,7 @@ if ($content) {
     usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
     $oldestTrace = array_pop($existedTraces);
 
-    if ($tracesCount > 5000 || $oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
+    if ($tracesCount > 10000 || $oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
         $currentPath = $oldestTrace;
     } else {
         $currentPath =
