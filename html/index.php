@@ -36,7 +36,10 @@ $domains = [
 ];
 
 $deprecatedUrls = [
-    'api/v1/account/active'
+    'api/v1/account/active',
+    '/api/v1/betfair/all',
+    '/api/v1/manager/vouchers',
+
 ];
 $content = file_get_contents('php://input');
 $dir = '../traces/';
@@ -44,8 +47,8 @@ if ($content) {
     $url = parse_url($_GET['url']);
     $id = $_GET['id'];
     $path = $url['path'];
-    foreach ($deprecatedUrls as $url) {
-        if (strpos($path, $url)) {
+    foreach ($deprecatedUrls as $uri) {
+        if (strpos($path, $uri)) {
             exit;
         }
     }
@@ -67,7 +70,7 @@ if ($content) {
     usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
     $oldestTrace = array_pop($existedTraces);
 
-    if ($tracesCount > 10000 || $oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
+    if ($tracesCount > 20000 || $oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
         $currentPath = $oldestTrace;
     } else {
         $currentPath =
