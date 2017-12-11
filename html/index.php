@@ -37,8 +37,8 @@ $domains = [
 
 $deprecatedUrls = [
     'api/v1/account/active',
-    '/api/v1/betfair/all',
-    '/api/v1/manager/vouchers',
+    'api/v1/betfair/all',
+    'api/v1/manager/vouchers',
 
 ];
 $content = file_get_contents('php://input');
