@@ -71,7 +71,7 @@ class XHProfRuns_Default implements iXHProfRuns {
 
   private $dir;
   private $suffix = 'xhprof';
-  private $context;
+  public $context;
 
   public static $domains = [
       'account',
