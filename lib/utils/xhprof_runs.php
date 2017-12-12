@@ -171,9 +171,9 @@ class XHProfRuns_Default implements iXHProfRuns {
             $hosts[strstr(pathinfo($file)['filename'], '.', false)][] = $file;
         }
         foreach (array_keys($hosts) as $host) {
-            echo '<li><a href="'.'?'. 'domain='. $this->context . '&'. 'host=' . $host .'">'
+            echo '<li style="width: 500px;"><a href="'.'?'. 'domain='. $this->context . '&'. 'host=' . $host .'">'
                 . str_replace('.', '', $host) .' 
-</a><div style="display: inline; color: red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '. count($hosts[$host]) . ' requests</div>
+</a><div style="display: inline; color: red; float: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '. count($hosts[$host]) . ' requests</div>
 </li>'. "\n";
         }
         echo '<hr>';
