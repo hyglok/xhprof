@@ -65,6 +65,7 @@ if ($content) {
     $path = str_replace('/api/v1', '', $path);
     $path = str_replace('/', '-', $path);
     $path = preg_replace('/[0-9]+/', '', $path);
+    $path = str_replace('-.-', '-', $path);
     $existedTraces = glob("{$dir}{$subFolder}/{$path}*");
     $tracesCount = count($existedTraces);
     usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
