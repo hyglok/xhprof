@@ -160,17 +160,19 @@ class XHProfRuns_Default implements iXHProfRuns {
         foreach (self::$domains as $domain) {
             echo '<li><a href="' /* . htmlentities($_SERVER['SCRIPT_NAME'])*/ . '?'. 'domain=' . $domain .'">'. $domain .'</a></li>'. "\n";
         }
-        echo "Existing runs:\n<hr><ul>\n";
-        $files = glob("{$this->dir}/*.{$this->suffix}");
-        usort($files, function($a, $b) {
-            return filemtime($a) < filemtime($b);
-        });
-        $hosts = [];
-        foreach ($files as $file)
-        {
-            $hosts[strstr(pathinfo($file)['filename'], '.', false)][] = $file;
-        }
-        foreach (array_keys($hosts) as $host) {
+      $files = glob("{$this->dir}/*.{$this->suffix}");
+      usort($files, function($a, $b) {
+          return filemtime($a) < filemtime($b);
+      });
+      $hosts = [];
+      foreach ($files as $file)
+      {
+          $hosts[strstr(pathinfo($file)['filename'], '.', false)][] = $file;
+      }
+
+      echo "<div style='color: green';> Total Requests: " . count($hosts, 1) . " \n</div><hr><ul>\n";
+
+      foreach (array_keys($hosts) as $host) {
             echo '<li style="width: 500px;"><a href="'.'?'. 'domain='. $this->context . '&'. 'host=' . $host .'">'
                 . str_replace('.', '', $host) .' 
 </a><div style="display: inline; color: red; float: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '. count($hosts[$host]) . ' requests</div>
