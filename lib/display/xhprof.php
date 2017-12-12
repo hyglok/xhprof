@@ -152,9 +152,8 @@ function xhprof_render_link($content, $href, $class='', $id='', $title='',
   if (!$content) {
     return '';
   }
-
   if ($href) {
-    $link = '<a href="' . ($href) . '"';
+    $link = '<a href="' . ($href) . '&domain='. $_GET['domain'] .'"';
   } else {
     $link = '<span';
   }
@@ -189,7 +188,6 @@ function xhprof_render_link($content, $href, $class='', $id='', $title='',
   if ($onmousedown) {
     $link .= ' onmousedown="' . ($onmousedown) . '"';
   }
-
   $link .= '>';
   $link .= $content;
   if ($href) {
