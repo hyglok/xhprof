@@ -45,7 +45,7 @@ $content = file_get_contents('php://input');
 $dir = '../traces/';
 if ($content) {
     $runTime = (int)(unserialize($content)['main()']['wt'] / 1000);
-    if ($runTime < 1000) {
+    if ($runTime < 500) {
         exit;
     }
     $url = parse_url($_GET['url']);
