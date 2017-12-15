@@ -49,7 +49,7 @@ if ($content) {
         $project = $url['host'];
     } else {
         $project = $_GET['project'];
-        $path = $_GET['action'];
+        $path = strtok($_GET['action'], '?');
     }
     $subFolder = 'other';
     foreach ($domains as $key => $domain) {
@@ -64,25 +64,25 @@ if ($content) {
     $path = str_replace('/', '-', $path);
     $path = preg_replace('/[0-9]+/', '', $path);
     $path = str_replace('-.-', '-', $path);
-    $existedTraces = glob("{$dir}{$subFolder}/{$path}*");
-    $tracesCount = count($existedTraces);
-    usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
-    $oldestTrace = array_pop($existedTraces);
+//    $existedTraces = glob("{$dir}{$subFolder}/{$path}*");
+//    $tracesCount = count($existedTraces);
+//    usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+//    $oldestTrace = array_pop($existedTraces);
 
-    if ($oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
-        $currentPath = $oldestTrace;
-    } else {
-        $currentPath =
-            $dir .
-            $subFolder.'/' .
-            $path .
-            '[' . ($tracesCount + 1) . ']' .
-            str_replace('.', '*', $id) .
-            '.' .
-            $project .
-            ".xhprof"
-        ;
-    }
+//    if ($oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
+//        $currentPath = $oldestTrace;
+//    } else {
+    $currentPath =
+        $dir .
+        $subFolder.'/' .
+        $path .
+//        '[' . ($tracesCount + 1) . ']' .
+        str_replace('.', '*', $id) .
+        '.' .
+        $project .
+        ".xhprof"
+    ;
+//    }
 
     if ($currentPath) {
         file_put_contents($currentPath, gzencode($content));
