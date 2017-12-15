@@ -32,6 +32,7 @@ $domains = [
     'betfair' => ['/api/v1/betfair'],
     'sportbook' => ['/api/v1/sportbook'],
     'player' => ['/api/v1/player'],
+    'workers' => ['betfair-worker']
 
 ];
 
@@ -59,7 +60,6 @@ if ($content) {
             }
         }
     }
-
     $path = str_replace('/api/v1', '', $path);
     $path = str_replace('/', '-', $path);
     $path = preg_replace('/[0-9]+/', '', $path);
@@ -75,7 +75,7 @@ if ($content) {
     $currentPath =
         $dir .
         $subFolder.'/' .
-        $path .
+        $path . '||' .
 //        '[' . ($tracesCount + 1) . ']' .
         str_replace('.', '*', $id) .
         '.' .
@@ -83,7 +83,6 @@ if ($content) {
         ".xhprof"
     ;
 //    }
-
     if ($currentPath) {
         file_put_contents($currentPath, gzencode($content));
     }

@@ -91,6 +91,7 @@ class XHProfRuns_Default implements iXHProfRuns {
       'betfair',
       'sportbook',
       'player',
+      'workers',
       'other'
 
   ];
