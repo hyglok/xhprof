@@ -8,4 +8,6 @@ RUN apk add --update --no-cache \
            graphviz \
            ttf-freefont
 
+RUN find /var/www/traces/* -type f -mmin +$((4 * 24 * 60 )) -exec rm {} \;
+
 VOLUME ["/var/www/traces"]
