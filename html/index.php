@@ -32,7 +32,7 @@ $domains = [
     'betfair' => ['/api/v1/betfair'],
     'sportbook' => ['/api/v1/sportbook'],
     'player' => ['/api/v1/player'],
-    'workers' => ['betfair-worker']
+    'workers' => ['betfair-worker', 'sportbook-worker', 'competition-worker', 'exchange-worker', 'matchbook-worker']
 
 ];
 
@@ -64,25 +64,18 @@ if ($content) {
     $path = str_replace('/', '-', $path);
     $path = preg_replace('/[0-9]+/', '', $path);
     $path = str_replace('-.-', '-', $path);
-//    $existedTraces = glob("{$dir}{$subFolder}/{$path}*");
-//    $tracesCount = count($existedTraces);
-//    usort($existedTraces, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
-//    $oldestTrace = array_pop($existedTraces);
+    $path = str_replace('.jpeg', '-jpeg', $path);
 
-//    if ($oldestTrace && time() - filemtime($oldestTrace) > 2 * 24 * 3600) {
-//        $currentPath = $oldestTrace;
-//    } else {
     $currentPath =
         $dir .
         $subFolder.'/' .
         $path . '||' .
-//        '[' . ($tracesCount + 1) . ']' .
         str_replace('.', '*', $id) .
         '.' .
         $project .
         ".xhprof"
     ;
-//    }
+
     if ($currentPath) {
         file_put_contents($currentPath, gzencode($content));
     }
